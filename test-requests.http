@@ -1,0 +1,83 @@
+### Vanexa auth — VS Code REST Client (humeshan pehle server: npm start)
+@baseUrl = http://localhost:4000
+
+### 1) Register — naya user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "testuser@example.com",
+  "password": "testpass123"
+}
+
+### 2) Login — token response body mein aayega (@name se next requests link ho sakti hain)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "testpass123"
+}
+
+### 3) Profile GET — login ke baad token cookie mein bhejo (body se copy)
+GET {{baseUrl}}/api/auth/profile
+Cookie: token=PASTE_TOKEN_FROM_LOGIN_RESPONSE_HERE
+
+### 3b) Profile GET — agar REST Client variable use karte ho (login ke turant baad run karo)
+GET {{baseUrl}}/api/auth/profile
+Cookie: token={{login.response.body.token}}
+
+### 4) Profile UPDATE — sirf name / email (JSON)
+PUT {{baseUrl}}/api/auth/profile
+Content-Type: application/json
+Cookie: token={{login.response.body.token}}
+
+{
+  "name": "Test User Updated",
+  "email": "testuser@example.com"
+}
+
+### 5) Avatar hataana — removeAvatar
+PUT {{baseUrl}}/api/auth/profile
+Content-Type: application/json
+Cookie: token={{login.response.body.token}}
+
+{
+  "removeAvatar": "true"
+}
+
+### 6) Password change
+PUT {{baseUrl}}/api/auth/password/update
+Content-Type: application/json
+Cookie: token={{login.response.body.token}}
+
+{
+  "oldPassword": "testpass123",
+  "newPassword": "newpass123",
+  "confirmPassword": "newpass123"
+}
+
+### 7) Forgot password (email + frontend URL query)
+POST {{baseUrl}}/api/auth/password/forgot?frontendUrl=http://localhost:5173
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com"
+}
+
+###
+# Avatar FILE upload Postman / Thunder Client se karo:
+#   Method: PUT  {{baseUrl}}/api/auth/profile
+#   Auth: Cookie token = (login se token)
+#   Body: form-data → avatar = File, optional name/email text fields
+###
+
+PUT {{baseUrl}}/api/auth/password/reset/PASTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "password": "newpass123",
+  "confirmPassword": "newpass123"
+}
