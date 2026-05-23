@@ -28,8 +28,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// CORS configuration - allow all origins for now
 app.use(cors({
-    origin:[process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
+    origin: true, // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -37,6 +39,16 @@ app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: "./uploads",
 }));
+
+// Health check route
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ 
+        success: true, 
+        message: 'Backend is running!',
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/admin", adminRoutes);
