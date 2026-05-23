@@ -29,11 +29,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// CORS configuration - allow all origins for now
+// CORS configuration - allow all origins
 app.use(cors({
-    origin: true, // Allow all origins
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    origin: '*', // Allow all origins (wildcard)
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 app.use(fileUpload({
     useTempFiles: true,
